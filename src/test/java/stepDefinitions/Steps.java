@@ -40,7 +40,7 @@ public class Steps {
         logger.info(Helpers.getJsonData(response2.asString(), "message"));
         logger.info(Helpers.getJsonData(response2.asString(), "city.id"));
         logger.info(Helpers.getJsonData(response2.asString(), "city.name"));
-        logger.info(Helpers.getJsonData(response2.asString(), "list"));
+
 
     }
 
