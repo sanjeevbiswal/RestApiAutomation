@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
         features = "src\\test\\java\\features",
         glue = {"stepDefinitions"},
         plugin = { "pretty", "html:target/cucumber-reports" },
+        tags = {"@holidayList"},
         monochrome = true,
         dryRun = false,
         strict = true

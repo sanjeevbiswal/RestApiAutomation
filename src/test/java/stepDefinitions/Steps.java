@@ -11,6 +11,10 @@ import org.apache.log4j.Logger;
 import org.junit.Assert;
 import utils.Helpers;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+
 public class Steps {
 
     Logger logger = LogManager.getLogger(Steps.class.getName());
@@ -40,6 +44,51 @@ public class Steps {
         logger.info(Helpers.getJsonData(response2.asString(), "message"));
         logger.info(Helpers.getJsonData(response2.asString(), "city.id"));
         logger.info(Helpers.getJsonData(response2.asString(), "city.name"));
+
+
+    }
+
+    @Given("^I got respnse from animal api$")
+    public void i_got_respnse_from_animal_api() throws Throwable {
+       RestAssured.useRelaxedHTTPSValidation();
+        Response res = RestAssured.given().get("https://cat-fact.herokuapp.com/facts").then().extract().response();
+        String users = Helpers.getJsonData(res.asString(), "all.type");
+        String[] usrs = users.split(",");
+        for(String val:usrs){
+            logger.info(val);
+        }
+    }
+
+    @Given("^I got holiday list for Country \"([^\"]*)\" and Year (\\d+)$")
+    public void i_got_holiday_list_for_Country_and_Year(String country, int year) throws Throwable {
+        logger.info("Testing holiday list for "+country+" and year:"+year);
+
+        Response res = RestAssured.given().relaxedHTTPSValidation().
+                and().queryParam("token", Base.getPropertiesData("holidayListKey")).log().all().
+                when().get(Base.getPropertiesData("holidayListEndPoint")).then().statusCode(200).extract().response();
+
+        String category=Helpers.getJsonData(res.asString(),"result.category");
+        logger.info(category);
+        String[] val = category.split(",");
+        System.out.println(val.length);
+        HashSet<String> hs=new HashSet<String>();
+        for(String value:val){
+            hs.add(value);
+        }
+
+        System.out.println(hs.size());
+
+        HashMap<String,Integer> hm=new HashMap<>();
+        for(String value:val){
+            if (hm.containsKey(value)) {
+                Integer count = hm.get(value);
+                hm.put(value,count+1);
+            }else{
+                hm.put(value,1);
+            }
+        }
+        logger.info(hm.toString());
+
 
 
     }
